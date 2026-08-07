@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assetplaza [브랜드명 : 숏폼스토리] - 가치를 완성하는 AI 자산 프론티어</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=Gothic+A1:wght@300;400;500;700;900&family=Black+Han+Sans&family=Nanum+Myeongjo:wght@400;700;800&family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-canvas: #07142F;
+            --bg-card: #0F1E3A;
+            --border-color: rgba(168,197,232,0.18);
+            --text-main: #FFFFFF;
+            --text-secondary: #8AA0C2;
+            --primary: #FCD34D;
+            --primary-rgb: 252,211,77;
+            --accent: #4FD8C4;
+            --accent-grad: linear-gradient(135deg, #FCD34D, #4FD8C4);
+            --border-radius: 10px;
+            --font-family: 'Pretendard', sans-serif;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-family); background: var(--bg-canvas); color: var(--text-main);
+            min-height: 100vh; overflow-x: hidden; -webkit-font-smoothing: antialiased;
+            word-break: keep-all; overflow-wrap: break-word;
+        }
+        .container { max-width: 1140px; margin: 0 auto; padding: 0 1.75rem; }
+
+        /* Nav */
+        nav {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+            background: #FFFFFF;
+            border-bottom: 1px solid rgba(7,20,47,0.12); padding: 1rem 0;
+        }
+        .nav-wrap { display: flex; justify-content: space-between; align-items: center; }
+        .nav-logo { display: inline-flex; flex-direction: column; align-items: flex-end; justify-content: center; margin-left: 3.2rem; color: var(--bg-canvas); text-align: right; text-decoration: none; white-space: nowrap; line-height: 1.15; }
+        .nav-logo-kicker { margin-bottom: 0.16rem; color: #9A6B2F; font-size: calc(0.86rem - 1pt); line-height: 1.2; font-weight: 500; letter-spacing: -0.15px; }
+        .nav-logo-line { font-size: 0.86rem; line-height: 1.15; font-weight: 500; letter-spacing: -0.45px; }
+        .nav-logo-line strong { font-size: calc(1.1rem + 1pt); font-weight: 800; }
+        .nav-logo svg { display: inline-block; vertical-align: middle; }
+        .nav-links { display: flex; gap: 1.75rem; list-style: none; }
+        .nav-links a { color: var(--bg-canvas); text-decoration: none; font-size: 0.88rem; font-weight: 600; transition: color 0.25s; }
+        .nav-links a:hover { color: var(--gold2, #E0B946); }
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.65rem 1.35rem; font-size: 0.88rem; font-weight: 600; border-radius: var(--border-radius); cursor: pointer; text-decoration: none; transition: all 0.3s; outline: none; border: none; font-family: var(--font-family); }
+        .btn-primary { background: var(--accent-grad); color: #fff; box-shadow: 0 4px 15px rgba(var(--primary-rgb),0.25); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(var(--primary-rgb),0.35); }
+        .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); }
+        .btn-outline:hover { background: rgba(var(--primary-rgb),0.06); border-color: var(--primary); }
+        .nav-cta { padding: 0.5rem 1.1rem; font-size: 0.8rem; color: var(--bg-canvas); border-color: var(--bg-canvas); }
+        .nav-cta:hover { color: #FFFFFF; background: var(--bg-canvas); border-color: var(--bg-canvas); }
+
+        /* Hero */
+        .hero { position: relative; isolation: isolate; min-height: clamp(532px, calc(100vh - 238px), 687px); padding-top: 5.6rem; padding-bottom: 7rem; text-align: left; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: -10%; bottom: -10%; left: 50%; width: 118vw; transform: translate3d(-51%,0.4%,0) perspective(1050px) rotateY(-6deg) rotateX(0.6deg) scale(1.08); transform-origin: 76% 50%; z-index: -2; background: var(--bg-canvas) url('hero-bg-ai-camera-motion-v4.png') 68% center / 80% auto no-repeat; filter: brightness(0.82) saturate(1.04); animation: hero-camera-turn 24s cubic-bezier(0.42,0,0.58,1) infinite alternate both; will-change: transform; backface-visibility: hidden; -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.2) 10%, #000 32%, #000 100%); mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.2) 10%, #000 32%, #000 100%); }
+        .hero::after { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%); z-index: -1; background: linear-gradient(90deg, var(--bg-canvas) 0%, var(--bg-canvas) 25%, rgba(7,20,47,0.97) 38%, rgba(7,20,47,0.82) 52%, rgba(7,20,47,0.42) 70%, rgba(7,20,47,0.12) 88%, rgba(7,20,47,0.06) 100%); }
+        .hero > *:not(.hero-geometry) { position: relative; z-index: 2; }
+        .hero-geometry { position: absolute; inset: 0 calc(50% - 50vw); z-index: 1; overflow: hidden; pointer-events: none; }
+        .hero-geometry span { position: absolute; display: block; }
+        .geo-orbit { width: 360px; height: 360px; right: 7vw; top: 13%; border: 1px solid rgba(79,216,196,0.34); border-radius: 50%; box-shadow: inset 0 0 0 38px rgba(79,216,196,0.025), inset 0 0 0 88px rgba(252,211,77,0.025); }
+        .geo-orbit::before, .geo-orbit::after { content: ''; position: absolute; left: 50%; top: 50%; background: rgba(168,197,232,0.32); transform: translate(-50%,-50%); }
+        .geo-orbit::before { width: 1px; height: 118%; }
+        .geo-orbit::after { width: 118%; height: 1px; }
+        .geo-frame { width: 250px; height: 165px; right: 19vw; bottom: 12%; border: 1px solid rgba(252,211,77,0.38); transform: rotate(-7deg); box-shadow: 18px 18px 0 rgba(7,20,47,0.18); animation: geo-float 11s ease-in-out infinite alternate; }
+        .geo-grid { width: 210px; height: 210px; right: 2.5vw; bottom: -34px; opacity: 0.42; background-image: linear-gradient(rgba(168,197,232,0.28) 1px, transparent 1px), linear-gradient(90deg, rgba(168,197,232,0.28) 1px, transparent 1px); background-size: 24px 24px; -webkit-mask-image: linear-gradient(135deg, transparent 6%, #000 56%); mask-image: linear-gradient(135deg, transparent 6%, #000 56%); }
+        @keyframes hero-camera-turn {
+            0% { transform: translate3d(-51%,0.4%,0) perspective(1050px) rotateY(-6deg) rotateX(0.6deg) scale(1.08); }
+            35% { transform: translate3d(-49.7%,-0.45%,0) perspective(1050px) rotateY(-3deg) rotateX(0.15deg) scale(1.13); }
+            70% { transform: translate3d(-48.4%,0.15%,0) perspective(1050px) rotateY(0deg) rotateX(-0.15deg) scale(1.18); }
+            100% { transform: translate3d(-47.2%,-0.25%,0) perspective(1050px) rotateY(2.5deg) rotateX(-0.45deg) scale(1.22); }
+        }
+        @keyframes geo-float { to { transform: translateY(-16px) rotate(-3deg); } }
+        .badge { background: rgba(var(--primary-rgb),0.1); color: var(--primary); padding: 0.36rem 0.96rem; border-radius: 9999px; font-size: 0.9rem; font-weight: 600; letter-spacing: 0.5px; border: 1px solid rgba(var(--primary-rgb),0.2); margin-bottom: 1.75rem; }
+        .hero h1 { font-size: 3.2rem; font-weight: 800; line-height: 1.15; margin-bottom: 1.25rem; max-width: 850px; letter-spacing: -1px; text-wrap: balance; }
+        .hero-desc { font-size: 1.1rem; color: var(--text-secondary); max-width: none; line-height: 1.65; margin-bottom: 2.25rem; white-space: nowrap; }
+        .hero-desc strong { color: rgb(79, 216, 196); font-size: calc(1em + 1pt); }
+        .hero-actions { display: flex; gap: 0.75rem; }
+
+        /* Logo Cloud */
+        .hero > .logo-cloud { position: absolute; z-index: 10; isolation: isolate; left: 50%; bottom: 0.2rem; width: min(1080px, calc(100% - 3.5rem)); margin: 0; padding: 1.1rem 0 0.7rem; transform: translateX(-50%); background: transparent; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); }
+        .logo-cloud::before { display: none; }
+        .logo-cloud-title { text-align: center; font-size: 0.78rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 2px; font-weight: 600; margin-bottom: 0.75rem; }
+        .logo-cloud-row { display: flex; justify-content: center; gap: 1rem 2rem; flex-wrap: wrap; }
+        .partner-logo { font-size: 1.1rem; font-weight: 700; color: var(--text-secondary); opacity: 1; letter-spacing: -0.5px; }
+
+        /* Sections */
+        .section-header { text-align: center; margin-bottom: 3rem; }
+        .section-tag { color: var(--primary); text-transform: uppercase; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; margin-bottom: 0.5rem; display: block; }
+        .section-h2 { font-size: 2rem; font-weight: 700; letter-spacing: -0.5px; text-wrap: balance; }
+
+        /* Services */
+        .services { padding: 5rem 0; }
+        .services .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+        .card {
+            background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--border-radius);
+            padding: 2rem 1.75rem; transition: all 0.3s cubic-bezier(0.2,0.8,0.2,1);
+        }
+        .card:hover { border-color: rgba(var(--primary-rgb),0.4); box-shadow: 0 0 20px rgba(var(--primary-rgb),0.1); transform: translateY(-3px); }
+        .card-icon { width: 44px; height: 44px; background: rgba(var(--primary-rgb),0.08); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--primary); margin-bottom: 1.25rem; }
+        .card-title { font-size: 1.15rem; font-weight: 600; margin-bottom: 0.5rem; text-wrap: balance; }
+        .card-desc { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.55; text-wrap: pretty; }
+
+        /* Stats */
+        .stats-bar { padding: 4rem 0; border-top: 1px solid var(--border-color); }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; text-align: center; }
+        .stat-num { font-size: 2.5rem; font-weight: 800; letter-spacing: -1px; background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: block; }
+        .stat-label { font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem; display: block; }
+
+        /* Portfolio */
+        .portfolio { padding: 5rem 0; border-top: 1px solid var(--border-color); }
+        .portfolio-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+        .pf-card { border-radius: var(--border-radius); overflow: hidden; border: 1px solid var(--border-color); transition: all 0.3s; background: var(--bg-card); }
+        .pf-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.12); }
+        a.pf-link { display: block; text-decoration: none; color: inherit; cursor: pointer; }
+        a.pf-link:hover { border-color: var(--primary); }
+        .pf-thumb { width: 100%; height: 180px; display: block; object-fit: cover; object-position: center; }
+        .pf-info { padding: 1.25rem; }
+        .pf-info h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.3rem; }
+        .pf-info p { font-size: 0.8rem; color: var(--text-secondary); }
+        .pf-info .pf-en { display: block; margin-top: 0.35rem; font-size: 0.68rem; font-weight: 600; color: var(--text-secondary); letter-spacing: 0.06em; text-transform: uppercase; }
+        .project-gallery { margin-top: 4.5rem; padding-top: 4rem; border-top: 1px solid var(--border-color); scroll-margin-top: 6rem; }
+        .project-gallery-head { display: flex; justify-content: space-between; align-items: end; gap: 2rem; margin-bottom: 1.75rem; }
+        .project-gallery-head h3 { font-size: 1.7rem; line-height: 1.25; text-wrap: balance; }
+        .project-gallery-head p { max-width: 440px; color: var(--text-secondary); font-size: 0.86rem; line-height: 1.6; text-align: right; }
+        .project-gallery-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1rem; }
+        .project-shot { grid-column: span 2; position: relative; min-width: 0; overflow: hidden; border: 1px solid var(--border-color); border-radius: var(--border-radius); background: var(--bg-card); transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; }
+        .project-shot:hover { transform: translateY(-4px); border-color: rgba(var(--primary-rgb),0.45); box-shadow: 0 14px 34px rgba(0,0,0,0.2); }
+        .project-shot img { width: 100%; aspect-ratio: 3 / 4; display: block; object-fit: cover; background: var(--bg-card); }
+        .project-shot figcaption { padding: 1rem; }
+        .project-shot strong { display: block; font-size: 0.88rem; line-height: 1.4; }
+        .project-shot span { display: block; margin-top: 0.32rem; color: var(--text-secondary); font-size: 0.68rem; letter-spacing: 0.05em; text-transform: uppercase; }
+        .video-project-gallery { margin-top: 4.5rem; padding-top: 4rem; border-top: 1px solid var(--border-color); scroll-margin-top: 6rem; }
+        .video-gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+        .video-shot { min-width: 0; overflow: hidden; border: 1px solid var(--border-color); border-radius: var(--border-radius); background: var(--bg-card); transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; }
+        .video-shot:hover { transform: translateY(-4px); border-color: rgba(var(--primary-rgb),0.45); box-shadow: 0 14px 34px rgba(0,0,0,0.2); }
+        .video-shot video { width: 100%; aspect-ratio: 9 / 16; display: block; object-fit: contain; background: #05060a; }
+        .video-shot figcaption { padding: 1rem 1.1rem 1.15rem; }
+        .video-shot strong { display: block; font-size: 0.92rem; line-height: 1.4; }
+        .video-shot span { display: block; margin-top: 0.32rem; color: var(--text-secondary); font-size: 0.68rem; letter-spacing: 0.05em; text-transform: uppercase; }
+        .ad-project-gallery { margin-top: 4.5rem; padding-top: 4rem; border-top: 1px solid var(--border-color); scroll-margin-top: 6rem; }
+        .ad-gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+        .ad-shot { min-width: 0; overflow: hidden; border: 1px solid var(--border-color); border-radius: var(--border-radius); background: var(--bg-card); transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; }
+        .ad-shot:hover { transform: translateY(-4px); border-color: rgba(var(--primary-rgb),0.45); box-shadow: 0 14px 34px rgba(0,0,0,0.2); }
+        .ad-shot-media { height: 440px; display: flex; align-items: center; justify-content: center; padding: 1rem; background: #05060a; }
+        .ad-shot img { width: 100%; height: 100%; display: block; object-fit: contain; }
+        .ad-shot:last-child { grid-column: 1 / -1; }
+        .ad-shot:last-child .ad-shot-media { height: auto; padding: 0; }
+        .ad-shot:last-child img { height: auto; max-height: none; }
+        .ad-shot figcaption { padding: 1rem 1.1rem 1.15rem; }
+        .ad-shot strong { display: block; font-size: 0.92rem; line-height: 1.4; }
+        .ad-shot span { display: block; margin-top: 0.32rem; color: var(--text-secondary); font-size: 0.68rem; letter-spacing: 0.05em; text-transform: uppercase; }
+        .cardnews-project-gallery { margin-top: 4.5rem; padding-top: 4rem; border-top: 1px solid var(--border-color); scroll-margin-top: 6rem; }
+        .cardnews-gallery-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1.25rem; }
+        .cardnews-shot { grid-column: span 2; min-width: 0; overflow: hidden; border: 1px solid var(--border-color); border-radius: var(--border-radius); background: var(--bg-card); transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; }
+        .cardnews-shot:nth-child(n+4) { grid-column: span 3; }
+        .cardnews-shot:hover { transform: translateY(-4px); border-color: rgba(var(--primary-rgb),0.45); box-shadow: 0 14px 34px rgba(0,0,0,0.2); }
+        .cardnews-shot-media { height: 500px; display: flex; align-items: center; justify-content: center; padding: 1rem; background: #05060a; }
+        .cardnews-shot img { width: 100%; height: 100%; display: block; object-fit: contain; }
+        .cardnews-shot figcaption { padding: 1rem 1.1rem 1.15rem; }
+        .cardnews-shot strong { display: block; font-size: 0.92rem; line-height: 1.4; }
+        .cardnews-shot span { display: block; margin-top: 0.32rem; color: var(--text-secondary); font-size: 0.68rem; letter-spacing: 0.05em; text-transform: uppercase; }
+
+        /* Testimonials */
+        .testimonials { padding: 5rem 0; border-top: 1px solid var(--border-color); }
+        .test-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+        .test-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 1.75rem; }
+        .test-quote { font-size: 0.92rem; line-height: 1.6; color: var(--text-main); margin-bottom: 1.25rem; font-style: italic; }
+        .test-author { display: flex; align-items: center; gap: 0.75rem; }
+        .test-avatar { width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; }
+        .test-author strong { font-size: 0.85rem; display: block; }
+        .test-author span { font-size: 0.72rem; color: var(--text-secondary); }
+
+        /* FAQ */
+        .faq-section { padding: 5rem 0; border-top: 1px solid var(--border-color); }
+        .faq-list { max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.75rem; }
+        .faq-item { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--border-radius); overflow: hidden; }
+        .faq-item summary { padding: 1.15rem 1.5rem; cursor: pointer; font-weight: 600; font-size: 0.95rem; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+        .faq-item summary::after { content: '+'; font-size: 1.2rem; color: var(--primary); font-weight: 300; transition: transform 0.3s; }
+        .faq-item[open] summary::after { transform: rotate(45deg); }
+        .faq-item p { padding: 0 1.5rem 1.15rem; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; }
+
+        /* Team */
+        .team-section { padding: 5rem 0; border-top: 1px solid var(--border-color); }
+        .team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; text-align: center; }
+        .team-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 2rem 1.25rem; }
+        .team-avatar { width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 1rem; }
+        .team-card h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .team-card p { font-size: 0.8rem; color: var(--text-secondary); }
+
+        /* Contact */
+        .contact { padding: 5rem 0 8rem; border-top: 1px solid var(--border-color); }
+        .contact-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 3.5rem; align-items: start; }
+        .contact-info h3 { font-size: 1.85rem; font-weight: 700; margin-bottom: 0.75rem; line-height: 1.3; text-wrap: balance; }
+        .contact-info > p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem; text-wrap: pretty; }
+        .contact-widgets { display: flex; flex-direction: column; gap: 0.75rem; }
+        .widget-item { display: flex; align-items: center; gap: 0.75rem; background: var(--bg-card); border: 1px solid var(--border-color); padding: 0.85rem; border-radius: var(--border-radius); }
+        .widget-circle { width: 34px; height: 34px; border-radius: 50%; background: rgba(var(--primary-rgb),0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; }
+        .widget-item h5 { font-weight: 600; font-size: 0.85rem; }
+        .widget-item p { font-size: 0.72rem; color: var(--text-secondary); }
+        .form-box { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 2rem; box-shadow: 0 16px 40px rgba(0,0,0,0.12); }
+        .form-header-row { display: flex; justify-content: space-between; margin-bottom: 1.25rem; font-size: 0.78rem; color: var(--text-secondary); }
+        .form-title { font-size: 1.15rem; font-weight: 600; margin-bottom: 1.25rem; }
+        .input-group { margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.35rem; }
+        .input-group label { font-size: 0.78rem; font-weight: 500; color: var(--text-secondary); }
+        .input-group input, .input-group textarea {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border-color);
+            padding: 0.7rem 0.9rem; color: var(--text-main); border-radius: var(--border-radius); outline: none;
+            font-family: var(--font-family); font-size: 0.88rem; transition: border-color 0.25s;
+        }
+        .input-group input:focus, .input-group textarea:focus { border-color: var(--primary); }
+
+        /* Contact chips (카톡/이메일/SNS) */
+        .contact-chips { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.5rem; }
+        .contact-chip { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.6rem 1rem; border-radius: var(--border-radius); border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main); font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: all 0.25s; white-space: nowrap; }
+        .contact-chip:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(var(--primary-rgb),0.15); }
+        .footer-contact { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.6rem; margin: 0.85rem 0; }
+        .footer-biz { font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.5rem; line-height: 1.7; }
+
+        /* Footer */
+        footer { padding: 3rem 0; border-top: 1px solid var(--border-color); text-align: center; }
+        footer p { font-size: 0.82rem; color: var(--text-secondary); }
+        footer .footer-brand { display: inline-flex; flex-direction: column; align-items: center; margin-bottom: 0.75rem; line-height: 1.15; }
+        .footer-brand-kicker { margin-bottom: 0.16rem; color: #D6A85B; font-size: calc(0.86rem - 1pt); line-height: 1.2; font-weight: 500; }
+        .footer-brand-line { color: var(--text-main); font-size: 0.86rem; line-height: 1.15; font-weight: 500; letter-spacing: -0.45px; }
+        .footer-brand-line strong { font-size: calc(1.1rem + 1pt); font-weight: 800; }
+
+        /* Animations */
+        
+        .reveal { opacity: 0; transform: translateY(24px); transition: all 0.7s cubic-bezier(0.16,1,0.3,1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-logo { margin-left: 0; }
+            .hero-desc { white-space: normal; }
+            .services .grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 2.2rem; }
+            .hero { min-height: auto; padding-top: 5.5rem; padding-bottom: 1.5rem; }
+            .hero > .logo-cloud { position: relative; left: auto; bottom: auto; width: min(1080px, calc(100% - 1rem)); margin: 1.5rem auto 0; padding: 1.4rem 0 0.8rem; transform: none; }
+            .logo-cloud-title { margin-bottom: 0.65rem; }
+            .logo-cloud-row { gap: 0.75rem 1.25rem; }
+            .hero::before { background-position: 62% center; }
+            .hero::after { background: linear-gradient(90deg, var(--bg-canvas) 0%, rgba(7,20,47,0.98) 32%, rgba(7,20,47,0.88) 58%, rgba(7,20,47,0.5) 82%, rgba(7,20,47,0.28) 100%); }
+            .geo-orbit { width: 240px; height: 240px; right: -80px; top: 18%; opacity: 0.7; }
+            .geo-frame { width: 170px; height: 112px; right: 4vw; bottom: 9%; opacity: 0.65; }
+            .geo-grid { display: none; }
+            .nav-links { display: none; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+            .portfolio-grid, .test-grid { grid-template-columns: 1fr; }
+            .project-gallery { margin-top: 3.25rem; padding-top: 3rem; }
+            .video-project-gallery { margin-top: 3.25rem; padding-top: 3rem; }
+            .ad-project-gallery { margin-top: 3.25rem; padding-top: 3rem; }
+            .cardnews-project-gallery { margin-top: 3.25rem; padding-top: 3rem; }
+            .project-gallery-head { align-items: flex-start; flex-direction: column; gap: 0.75rem; }
+            .project-gallery-head p { text-align: left; }
+            .project-gallery-grid { grid-template-columns: repeat(2, 1fr); }
+            .project-shot { grid-column: span 1; }
+            .video-gallery-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
+            .ad-gallery-grid { grid-template-columns: 1fr; }
+            .ad-shot-media { height: auto; min-height: 280px; max-height: 520px; }
+            .ad-shot img { height: auto; max-height: 488px; }
+            .cardnews-gallery-grid { grid-template-columns: 1fr; }
+            .cardnews-shot, .cardnews-shot:nth-child(n+4) { grid-column: span 1; }
+            .cardnews-shot-media { height: auto; min-height: 280px; max-height: 600px; }
+            .cardnews-shot img { height: auto; max-height: 568px; }
+            .team-grid { grid-template-columns: repeat(2, 1fr); }
+            .contact-layout { grid-template-columns: 1fr; }
+        }
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
+            .project-gallery-grid { grid-template-columns: repeat(6, 1fr); }
+            .project-shot { grid-column: span 2; }
+            .video-gallery-grid { grid-template-columns: repeat(2, 1fr); }
+            .ad-gallery-grid { grid-template-columns: repeat(2, 1fr); }
+            .cardnews-gallery-grid { grid-template-columns: repeat(2, 1fr); }
+            .cardnews-shot, .cardnews-shot:nth-child(n+4) { grid-column: span 1; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .geo-orbit, .geo-frame { animation: none; }
+        }
+    </style>
+</head>
+<body>
+    <nav><div class="container nav-wrap">
+        <a href="#" class="nav-logo" aria-label="숏폼스토리 홈">
+            <span class="nav-logo-kicker">함께하는 브랜드 이야기</span>
+            <span class="nav-logo-line"><strong>숏폼스토리</strong> | 기획·제작·편집·운영</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="#services">서비스</a></li>
+            <li><a href="#portfolio">포트폴리오</a></li>
+            <li><a href="#testimonials">후기</a></li>
+            <li><a href="#contact">문의</a></li>
+        </ul>
+        <a href="#contact" class="btn btn-outline nav-cta">제작문의</a>
+    </div></nav>
+
+    <div class="container hero">
+        <div class="hero-geometry" aria-hidden="true"><span class="geo-orbit"></span><span class="geo-frame"></span><span class="geo-grid"></span></div>
+        <span class="badge">Branding Agency : Short-Form Story</span>
+        <h1>AI로 확장하는 브랜드의 가능성</h1>
+        <p class="hero-desc">아이디어를 콘텐츠로, 콘텐츠를 브랜드 가치로 연결하는 AI 프론티어<br><strong>‘숏폼스토리’</strong> 입니다</p>
+        <div class="hero-actions">
+            <a href="#contact" class="btn btn-primary">프로젝트 시작하기</a>
+            <a href="#services" class="btn btn-outline">서비스 둘러보기</a>
+        </div>
+        <section class="logo-cloud">
+            <div class="container">
+                <p class="logo-cloud-title">함께 성장하는 파트너</p>
+                <div class="logo-cloud-row">
+                    <span class="partner-logo">Pro9 Asset</span><span class="partner-logo">Pro9 Realty</span><span class="partner-logo">Pro9 Energy</span><span class="partner-logo">Pro9 Academy</span><span class="partner-logo">불광사람사랑치과</span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <section class="services" id="services">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">SERVICES</span>
+                <h2 class="section-h2">전문 서비스 분야</h2>
+            </div>
+            <div class="grid">
+                <div class="card reveal">
+                    <div class="card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg></div>
+                    <h3 class="card-title">브랜드 캐릭터 생성</h3>
+                    <p class="card-desc">브랜드의 정체성을 시각화해 기억에 남는 캐릭터를 제작합니다.</p>
+                </div>
+                <div class="card reveal">
+                    <div class="card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+                    <h3 class="card-title">AI 영상 제작</h3>
+                    <p class="card-desc">아이디어에 움직임과 이야기를 더해 목적에 맞는 영상으로 완성합니다.</p>
+                </div>
+                <div class="card reveal">
+                    <div class="card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/></svg></div>
+                    <h3 class="card-title">AI 광고 소재 &amp; 로고제작</h3>
+                    <p class="card-desc">시선을 사로잡고 행동을 이끄는 맞춤형 광고 콘텐츠를 제작합니다.</p>
+                </div>
+                <div class="card reveal">
+                    <div class="card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+                    <h3 class="card-title">카드뉴스 &amp; 원페이지 릴스</h3>
+                    <p class="card-desc">핵심 메시지를 쉽고 명확하게 전달하는 콘텐츠로 디자인합니다.</p>
+                </div></div>
+        </div>
+    </section>
+
+    
+    <section class="stats-bar" id="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item reveal"><span class="stat-num">150+</span><span class="stat-label">완료 프로젝트</span></div><div class="stat-item reveal"><span class="stat-num">98%</span><span class="stat-label">고객 만족도</span></div><div class="stat-item reveal"><span class="stat-num">24h</span><span class="stat-label">빠른 응답</span></div><div class="stat-item reveal"><span class="stat-num">50+</span><span class="stat-label">파트너사</span></div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="portfolio" id="portfolio">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2 class="section-h2">PORTFOLIO</h2>
+            </div>
+            <div class="portfolio-grid">
+                <a href="#character-logo-projects" class="pf-card pf-link reveal"><img class="pf-thumb" src="portfolio/dental-character.png" alt="불광사람사랑치과 치과 캐릭터 제작 사례">
+                    <div class="pf-info"><h4>브랜드 캐릭터 생성</h4><span class="pf-en">Character &amp; Logo Design</span></div>
+                </a>
+                <a href="#ai-video-projects" class="pf-card pf-link reveal"><video class="pf-thumb" autoplay muted loop playsinline preload="auto" aria-label="AI 영상제작 미리보기"><source src="portfolio/videos/dental-real.mp4" type="video/mp4"></video>
+                    <div class="pf-info"><h4>AI 영상제작</h4><span class="pf-en">AI Video Production</span></div>
+                </a>
+                <a href="#ai-ad-projects" class="pf-card pf-link reveal"><img class="pf-thumb" src="portfolio/ads/beauty-1-real.png" alt="AI 광고소재 및 로고제작 미리보기" loading="lazy">
+                    <div class="pf-info"><h4>AI 광고소재 &amp; 로고제작</h4><span class="pf-en">AI Advertising Creative</span></div>
+                </a>
+                <a href="#cardnews-projects" class="pf-card pf-link reveal"><img class="pf-thumb" src="portfolio/cardnews/dental-1.png" alt="카드뉴스 및 원페이지 릴스 미리보기" loading="lazy">
+                    <div class="pf-info"><h4>카드뉴스 &amp; 원페이지 릴스</h4><span class="pf-en">Card News Content</span></div>
+                </a>
+            </div>
+            <div class="project-gallery" id="character-logo-projects">
+                <div class="project-gallery-head reveal">
+                    <div><span class="section-tag">CHARACTER &amp; LOGO PROJECTS</span><h3>브랜드 캐릭터 생성</h3></div>
+                    <p>브랜드의 성격에 맞춰 제작한 실사 이미지와 캐릭터 디자인 사례입니다</p>
+                </div>
+                <div class="project-gallery-grid">
+                    <figure class="project-shot reveal"><img src="portfolio/dental-real.png" alt="불광사람사랑치과 실사 이미지" loading="lazy"><figcaption><strong>불광사람사랑치과 실사 이미지</strong><span>Dental Photoreal Visual</span></figcaption></figure>
+                    <figure class="project-shot reveal"><img src="portfolio/dental-character.png" alt="불광사람사랑치과 캐릭터 이미지" loading="lazy"><figcaption><strong>불광사람사랑치과 캐릭터 이미지</strong><span>Dental Character Design</span></figcaption></figure>
+                    <figure class="project-shot reveal"><img src="portfolio/violin-academy-real.png" alt="바이올린학원 실사 이미지" loading="lazy"><figcaption><strong>바이올린학원 실사 이미지</strong><span>Violin Academy Visual</span></figcaption></figure>
+                    <figure class="project-shot reveal"><img src="portfolio/certificate-site-real.png" alt="자격증 사이트 실사 이미지" loading="lazy"><figcaption><strong>자격증 사이트 실사 이미지</strong><span>Certificate Site Visual</span></figcaption></figure>
+                    <figure class="project-shot reveal"><img src="portfolio/jewelry-animal-character.png" alt="쥬얼리 동물 캐릭터 이미지" loading="lazy"><figcaption><strong>쥬얼리 동물 캐릭터 이미지</strong><span>Jewelry Animal Character</span></figcaption></figure>
+                    <figure class="project-shot reveal"><img src="portfolio/real-estate-office-real.png" alt="공인중개사사무소 실사 이미지" loading="lazy"><figcaption><strong>공인중개사사무소 실사 이미지</strong><span>Real Estate Office Visual</span></figcaption></figure>
+                </div>
+            </div>
+            <div class="video-project-gallery" id="ai-video-projects">
+                <div class="project-gallery-head reveal">
+                    <div><span class="section-tag">AI VIDEO PROJECTS</span><h3>AI 영상 제작</h3></div>
+                    <p>목적에 맞춰 제작한 실사형, 캐릭터형 AI영상 사례입니다</p>
+                </div>
+                <div class="video-gallery-grid">
+                    <figure class="video-shot reveal"><video controls playsinline preload="metadata" aria-label="불광사람사랑치과 실사 영상"><source src="portfolio/videos/dental-real.mp4" type="video/mp4"></video><figcaption><strong>불광사람사랑치과 실사 영상</strong><span>Dental Photoreal Video</span></figcaption></figure>
+                    <figure class="video-shot reveal"><video controls playsinline preload="metadata" aria-label="불광사람사랑치과 캐릭터 영상"><source src="portfolio/videos/dental-character.mp4" type="video/mp4"></video><figcaption><strong>불광사람사랑치과 캐릭터 영상</strong><span>Dental Character Video</span></figcaption></figure>
+                    <figure class="video-shot reveal"><video controls playsinline preload="metadata" aria-label="재테크 채널 캐릭터 영상"><source src="portfolio/videos/finance-channel-character.mp4" type="video/mp4"></video><figcaption><strong>재테크 채널 캐릭터 영상</strong><span>Finance Channel Character</span></figcaption></figure>
+                    <figure class="video-shot reveal"><video controls playsinline preload="metadata" aria-label="쥬얼리 캐릭터 영상"><source src="portfolio/videos/jewelry-character.mp4" type="video/mp4"></video><figcaption><strong>쥬얼리 캐릭터 영상</strong><span>Jewelry Character Video</span></figcaption></figure>
+                    <figure class="video-shot reveal"><video controls playsinline preload="metadata" aria-label="공인중개사사무소 캐릭터 영상"><source src="portfolio/videos/real-estate-character.mp4" type="video/mp4"></video><figcaption><strong>공인중개사사무소 캐릭터 영상</strong><span>Real Estate Character Video</span></figcaption></figure>
+                    <figure class="video-shot reveal"><video controls playsinline preload="metadata" aria-label="건강식품 캐릭터 영상"><source src="portfolio/videos/health-food-character.mp4" type="video/mp4"></video><figcaption><strong>건강식품 캐릭터 영상</strong><span>Health Food Character Video</span></figcaption></figure>
+                </div>
+            </div>
+            <div class="ad-project-gallery" id="ai-ad-projects">
+                <div class="project-gallery-head reveal">
+                    <div><span class="section-tag">AI AD CREATIVE</span><h3>AI 광고 소재 &amp; 로고제작</h3></div>
+                    <p>제품과 서비스의 특징을 명확하게 전달하도록 제작한 실사형 광고 이미지와 디자인 사례입니다.</p>
+                </div>
+                <div class="ad-gallery-grid">
+                    <figure class="ad-shot reveal"><div class="ad-shot-media"><img src="portfolio/ads/beauty-1-real.png" alt="뷰티1 실사 이미지" loading="lazy"></div><figcaption><strong>뷰티1 실사 이미지</strong><span>Beauty Photoreal Creative 01</span></figcaption></figure>
+                    <figure class="ad-shot reveal"><div class="ad-shot-media"><img src="portfolio/ads/beauty-2-real.png" alt="뷰티2 실사 이미지" loading="lazy"></div><figcaption><strong>뷰티2 실사 이미지</strong><span>Beauty Photoreal Creative 02</span></figcaption></figure>
+                    <figure class="ad-shot reveal"><div class="ad-shot-media"><img src="portfolio/ads/kitchen-product-real.png" alt="주방용품 실사 이미지" loading="lazy"></div><figcaption><strong>주방용품 실사 이미지</strong><span>Kitchen Product Creative</span></figcaption></figure>
+                    <figure class="ad-shot reveal"><div class="ad-shot-media"><img src="portfolio/ads/pro9-realty-logo-design.png" alt="Pro9 Realty 로고 디자인" loading="lazy"></div><figcaption><strong>로고 디자인</strong><span>Pro9 Realty Logo Design</span></figcaption></figure>
+                    <figure class="ad-shot reveal"><div class="ad-shot-media"><img src="portfolio/ads/real-estate-blog-design.png" alt="공인중개사사무소 블로그 디자인" loading="lazy"></div><figcaption><strong>공인중개사사무소 블로그 디자인</strong><span>Real Estate Blog Design</span></figcaption></figure>
+                </div>
+            </div>
+            <div class="cardnews-project-gallery" id="cardnews-projects">
+                <div class="project-gallery-head reveal">
+                    <div><span class="section-tag">CARD NEWS PROJECTS</span><h3>카드뉴스 &amp; 원페이지 릴스</h3></div>
+                    <p>핵심 메시지를 쉽고 명확하게 전달하는 의료,재테크 분야의 카드뉴스와 원페이지릴스 사례입니다.</p>
+                </div>
+                <div class="cardnews-gallery-grid">
+                    <figure class="cardnews-shot reveal"><div class="cardnews-shot-media"><img src="portfolio/cardnews/dental-1.png" alt="치과 카드뉴스 1" loading="lazy"></div><figcaption><strong>치과1</strong><span>Dental Card News 01</span></figcaption></figure>
+                    <figure class="cardnews-shot reveal"><div class="cardnews-shot-media"><img src="portfolio/cardnews/dental-2.png" alt="치과 카드뉴스 2" loading="lazy"></div><figcaption><strong>치과2</strong><span>Dental Card News 02</span></figcaption></figure>
+                    <figure class="cardnews-shot reveal"><div class="cardnews-shot-media"><img src="portfolio/cardnews/finance-1.png" alt="재테크 카드뉴스 1" loading="lazy"></div><figcaption><strong>재테크1</strong><span>Finance Card News 01</span></figcaption></figure>
+                    <figure class="cardnews-shot reveal"><div class="cardnews-shot-media"><img src="portfolio/cardnews/finance-2.png" alt="재테크 카드뉴스 2" loading="lazy"></div><figcaption><strong>재테크2</strong><span>Finance Card News 02</span></figcaption></figure>
+                    <figure class="cardnews-shot reveal"><div class="cardnews-shot-media"><img src="portfolio/cardnews/finance-3.png" alt="재테크 카드뉴스 3" loading="lazy"></div><figcaption><strong>재테크3</strong><span>Finance Card News 03</span></figcaption></figure>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">TESTIMONIALS</span>
+                <h2 class="section-h2">고객의 목소리</h2>
+            </div>
+            <div class="test-grid">
+                <div class="test-card reveal">
+                    <p class="test-quote">"<span>기대 이상의 결과물이었습니다. 디자인 퀄리티와 기술 구현력 모두 최상급이었어요.</span>"</p>
+                    <div class="test-author"><div class="test-avatar" style="background:linear-gradient(135deg,#FCD34D,#4FD8C4);"></div><div><strong>김서연</strong><span>MarketPro CEO</span></div></div>
+                </div><div class="test-card reveal">
+                    <p class="test-quote">"<span>SNS 운영 대행부터 웹사이트까지, 원스톱으로 해결해주니 업무 효율이 200% 향상됐습니다.</span>"</p>
+                    <div class="test-author"><div class="test-avatar" style="background:linear-gradient(135deg,#4FD8C4,#FCD34D);"></div><div><strong>이준혁</strong><span>CloudSync CTO</span></div></div>
+                </div><div class="test-card reveal">
+                    <p class="test-quote">"<span>반응형 디자인과 인터랙션이 완벽했고, 납기일도 정확히 지켜주셔서 신뢰가 갑니다.</span>"</p>
+                    <div class="test-author"><div class="test-avatar" style="background:linear-gradient(135deg,#FCD34D,#4FD8C4);"></div><div><strong>박지민</strong><span>DesignLab Head</span></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    
+    
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="contact-layout">
+                <div class="contact-info reveal">
+                    <span class="section-tag">CONTACT</span>
+                    <h3>새로운 프로젝트를 시작해볼까요?</h3>
+                    <p>파트너십을 통해 더 빠르고 아름다운 디지털 프로덕트를 론칭하세요. 24시간 이내에 전문 컨설턴트가 회신드립니다.</p>
+                    <div class="contact-chips"><a href="https://open.kakao.com/o/sHJEnMDc" target="_blank" rel="noopener" class="contact-chip kakao">💬 카카오톡 상담</a><a href="tel:010-3219-4116" class="contact-chip">📞 010-3219-4116</a><a href="mailto:q01032194116@gmail.com" class="contact-chip">✉️ q01032194116@gmail.com</a><a href="https://www.instagram.com/shortform_story/" target="_blank" rel="noopener" class="contact-chip">📷 Instagram</a><a href="https://www.youtube.com/channel/UCqyDtzKl1yvLS82G8y_PuFQ" target="_blank" rel="noopener" class="contact-chip">▶ YouTube</a></div>
+                    <div class="contact-widgets">
+                        <div class="widget-item"><div class="widget-circle">1</div><div><h5>빠른 조율</h5><p>온라인 즉시 견적 확인 가능</p></div></div>
+                        <div class="widget-item"><div class="widget-circle">2</div><div><h5>프리미엄 지향</h5><p>고객 경험 중심 디자인 제공</p></div></div>
+                    </div>
+                </div>
+                <div class="form-box reveal">
+                    <div class="form-header-row"><span>프로젝트 상담</span><span>STEP 1 / 2</span></div>
+                    <h4 class="form-title">프로젝트 의뢰하기</h4>
+                    <div class="input-group"><label>성함 또는 기업명</label><input type="text" placeholder="홍길동"></div>
+                    <div class="input-group"><label>이메일</label><input type="text" placeholder="example@domain.com"></div>
+                    <div class="input-group"><label>프로젝트 설명</label><textarea placeholder="요청 사항과 디자인 레퍼런스를 적어주세요."></textarea></div>
+                    <button class="btn btn-primary" style="width:100%;margin-top:0.75rem;">의뢰 전송하기</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <span class="footer-brand">
+                <span class="footer-brand-kicker">함께하는 브랜드 이야기</span>
+                <span class="footer-brand-line"><strong>숏폼스토리</strong> | 기획·제작·편집·운영</span>
+            </span>
+            <div class="footer-contact"><a href="https://open.kakao.com/o/sHJEnMDc" target="_blank" rel="noopener" class="contact-chip kakao">💬 카카오톡 상담</a><a href="tel:010-3219-4116" class="contact-chip">📞 010-3219-4116</a><a href="mailto:q01032194116@gmail.com" class="contact-chip">✉️ q01032194116@gmail.com</a><a href="https://www.instagram.com/shortform_story/" target="_blank" rel="noopener" class="contact-chip">📷 Instagram</a><a href="https://www.youtube.com/channel/UCqyDtzKl1yvLS82G8y_PuFQ" target="_blank" rel="noopener" class="contact-chip">▶ YouTube</a></div>
+            <p class="footer-biz">서울특별시 서대문구 명지길86&nbsp;&nbsp;·&nbsp;&nbsp;010-3219-4116&nbsp;&nbsp;·&nbsp;&nbsp;q01032194116@gmail.com</p>
+            <p>&copy; 2026 숏폼스토리 by Assetplaza. All Rights Reserved.</p>
+            <p style="margin-top:0.35rem;font-size:0.75rem;opacity:0.6;">오파독 AI 홈페이지 빌더로 제작되었습니다.</p>
+        </div>
+    </footer>
+
+    <script>
+    const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+    </script>
+    
+    
+</body>
+</html>
