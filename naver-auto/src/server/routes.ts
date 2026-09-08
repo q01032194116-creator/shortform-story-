@@ -5,6 +5,7 @@ import { collect, closeScrapeContext } from "../collect/index.js";
 import { draftPost, publishDraft, runFullPipeline } from "../pipeline.js";
 import { login, loginInProgress } from "../naver/login.js";
 import { checkSession, logout } from "../naver/session.js";
+import { profileHolder } from "../naver/browser.js";
 import { checkRateLimits } from "../naver/publish.js";
 import { loadSettings, redactSettings, saveSettings } from "../settings.js";
 import { getAccount, getPost, listPosts, listPublishes, upsertPost } from "../store/db.js";
@@ -28,6 +29,7 @@ api.get("/status", async (_req, res) => {
     claude: describeClaude(),
     rateLimit: checkRateLimits(settings),
     loginInProgress: loginInProgress(),
+    profileBusy: profileHolder(),
   });
 });
 
@@ -63,6 +65,13 @@ api.post("/naver/login", async (_req, res) => {
 });
 
 api.get("/naver/status", async (_req, res) => {
+  if (loginInProgress()) {
+    return fail(res, new Error("로그인 창이 열려 있습니다. 로그인을 마친 뒤 다시 확인해 주세요."), 409);
+  }
+  const holder = profileHolder();
+  if (holder) {
+    return fail(res, new Error(`네이버 브라우저를 ${holder} 작업이 사용 중입니다. 잠시 후 다시 시도해 주세요.`), 409);
+  }
   try {
     res.json(await checkSession());
   } catch (error) {
@@ -70,7 +79,13 @@ api.get("/naver/status", async (_req, res) => {
   }
 });
 
-api.post("/naver/logout", (_req, res) => res.json(logout()));
+api.post("/naver/logout", (_req, res) => {
+  const holder = profileHolder();
+  if (holder) {
+    return fail(res, new Error(`${holder} 작업이 브라우저를 사용 중이라 로그아웃할 수 없습니다.`), 409);
+  }
+  res.json(logout());
+});
 
 /* ------------------------------------------------------------------- Content */
 

@@ -26,6 +26,8 @@ export interface Status {
   claude: string;
   rateLimit: { ok: boolean; reason: string };
   loginInProgress: boolean;
+  /** Name of the task currently holding the Naver browser, if any. */
+  profileBusy: string | null;
 }
 
 export const api = {

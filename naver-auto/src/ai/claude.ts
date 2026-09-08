@@ -165,8 +165,10 @@ export async function ask<T>(options: AskOptions<T>): Promise<T> {
   const args = ["-p", "--output-format", "json", "--json-schema", JSON.stringify(schema), "--model", model];
 
   if (images.length > 0) {
-    // Vision: let the model open the files, and nothing else.
-    args.push("--allowedTools", "Read", "--max-turns", "6");
+    // Vision: let the model open the files, and nothing else. --restricted drops
+    // the command- and code-running tools so "read this image" cannot become
+    // anything more than that.
+    args.push("--restricted", "--allowedTools", "Read", "--max-turns", "6");
     for (const dir of new Set(images.map((p) => join(p, "..")))) args.push("--add-dir", dir);
   } else {
     // Pure reasoning over text we already supplied: no tools, no web access.

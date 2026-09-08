@@ -6,6 +6,9 @@ import { dumpDebug, findFirst, findOptional } from "./selectors.js";
 
 export type Reporter = (message: string) => void;
 
+/** SmartEditor uses the platform's own modifier for formatting shortcuts. */
+const MOD = process.platform === "darwin" ? "Meta" : "Control";
+
 const WRITE_URL = (blogId: string) => `https://blog.naver.com/${blogId}?Redirect=Write&`;
 
 /** SmartEditor lives inside #mainFrame; everything below operates on that frame. */
@@ -32,9 +35,26 @@ export async function openEditor(page: Page, blogId: string, report: Reporter): 
   return frame;
 }
 
+/**
+ * Strip anything that would change the document structure when typed.
+ *
+ * keyboard.type() sends a real Enter for "\n", which would split a paragraph
+ * into extra editor blocks. Block structure comes from the block array, so any
+ * newline inside a single block's text is noise and collapses to a space.
+ */
+export function sanitizeForTyping(text: string): string {
+  return text
+    .replace(/\r\n?/g, "\n")
+    .replace(/[\n\t\v\f\u2028\u2029]+/g, " ")
+    .replace(/[ \u00a0]{2,}/g, " ")
+    .trim();
+}
+
 /** Type with a varying delay so input does not look machine-generated. */
 async function humanType(frame: Frame, text: string): Promise<void> {
-  for (const chunk of text.match(/.{1,12}/gs) ?? []) {
+  const safe = sanitizeForTyping(text);
+  if (!safe) return;
+  for (const chunk of safe.match(/.{1,12}/g) ?? []) {
     await frame.page().keyboard.type(chunk, { delay: 18 + Math.random() * 32 });
   }
 }
@@ -122,7 +142,11 @@ export async function writeIntoEditor(
             // Leave the quote block so the next paragraph is plain text.
             await page.keyboard.press("Enter");
           } else {
+            // Bold on, type, bold off — otherwise a "bold" heading would be
+            // indistinguishable from a paragraph.
+            await page.keyboard.press(`${MOD}+KeyB`);
             await humanType(frame, block.text);
+            await page.keyboard.press(`${MOD}+KeyB`);
             await page.keyboard.press("Enter");
           }
           break;

@@ -99,7 +99,8 @@ function RunTab({
   const [keyword, setKeyword] = useState("");
   const account = status?.account;
   const settings = status?.settings;
-  const ready = Boolean(account?.loggedIn && keyword.trim() && !busy);
+  const profileBusy = status?.profileBusy ?? null;
+  const ready = Boolean(account?.loggedIn && keyword.trim() && !busy && !profileBusy);
 
   return (
     <>
@@ -118,10 +119,18 @@ function RunTab({
                 {account.blogId ? `블로그 ID: ${account.blogId}` : "블로그 ID 확인 실패"}
                 {account.nickname ? ` · ${account.nickname}` : ""}
               </span>
-              <button className="btn ghost small" onClick={() => void call(api.naverStatus)}>
+              <button
+                className="btn ghost small"
+                disabled={Boolean(profileBusy)}
+                onClick={() => void call(api.naverStatus)}
+              >
                 세션 확인
               </button>
-              <button className="btn ghost small" onClick={() => void call(api.naverLogout)}>
+              <button
+                className="btn ghost small"
+                disabled={Boolean(profileBusy)}
+                onClick={() => void call(api.naverLogout)}
+              >
                 로그아웃
               </button>
             </>
@@ -129,8 +138,8 @@ function RunTab({
             <>
               <span className="pill bad">로그인 필요</span>
               <span className="grow">버튼을 누르면 네이버 로그인 창이 열립니다. 아이디·비밀번호는 저장하지 않습니다.</span>
-              <button className="btn" onClick={() => void call(api.naverLogin)}>
-                네이버 로그인
+              <button className="btn" disabled={Boolean(profileBusy)} onClick={() => void call(api.naverLogin)}>
+                {profileBusy === "login" ? "로그인 창 확인" : "네이버 로그인"}
               </button>
             </>
           )}
@@ -175,6 +184,11 @@ function RunTab({
           </button>
         </div>
         {busy && <p className="hint" style={{ marginTop: 12 }}>진행 중… 아래 로그를 확인하세요. (전체 3~6분)</p>}
+        {profileBusy === "login" && (
+          <p className="hint" style={{ marginTop: 12 }}>
+            로그인 창이 열려 있습니다. 창에서 로그인을 마쳐야 다음 작업을 시작할 수 있습니다.
+          </p>
+        )}
       </div>
 
       <div className="card">

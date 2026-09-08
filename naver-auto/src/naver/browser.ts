@@ -42,3 +42,37 @@ export function clearProfile(): void {
 export function pause(minMs: number, maxMs: number): Promise<void> {
   return new Promise((r) => setTimeout(r, minMs + Math.random() * (maxMs - minMs)));
 }
+
+let profileLock: Promise<unknown> = Promise.resolve();
+let holder: string | null = null;
+
+/** Who currently owns the Naver profile, if anyone. */
+export function profileHolder(): string | null {
+  return holder;
+}
+
+/**
+ * Serialise every use of the Naver profile.
+ *
+ * Chromium does not refuse a second instance on the same user-data-dir, which
+ * is worse than refusing: cookies written by a live window are not on disk yet,
+ * so a concurrent session check reads a half-written profile, concludes the
+ * user is logged out, and overwrites good account state. One owner at a time
+ * removes that whole class of bug.
+ */
+export function withProfile<T>(owner: string, fn: () => Promise<T>): Promise<T> {
+  const run = profileLock.then(async () => {
+    holder = owner;
+    try {
+      return await fn();
+    } finally {
+      holder = null;
+    }
+  });
+  // Keep the chain alive even when this task rejects.
+  profileLock = run.then(
+    () => undefined,
+    () => undefined,
+  );
+  return run;
+}

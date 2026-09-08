@@ -23,8 +23,26 @@ export const DEFAULT_SETTINGS: Settings = {
   unsplashKey: "",
 };
 
+const SETTING_KEYS = Object.keys(DEFAULT_SETTINGS) as Array<keyof Settings>;
+
+/**
+ * Drop anything that is not a real setting.
+ *
+ * The dashboard round-trips the redacted view, which carries presentation flags
+ * like hasPexelsKey. Filtering on both load and save means a file that already
+ * picked up such keys heals itself on the next write instead of carrying them
+ * forever.
+ */
+function pickKnown(source: Partial<Settings>): Partial<Settings> {
+  const clean: Partial<Settings> = {};
+  for (const key of SETTING_KEYS) {
+    if (source[key] !== undefined) (clean as Record<string, unknown>)[key] = source[key];
+  }
+  return clean;
+}
+
 export function loadSettings(): Settings {
-  const stored = readJson<Partial<Settings>>(PATHS.settings, {});
+  const stored = pickKnown(readJson<Partial<Settings>>(PATHS.settings, {}));
   return {
     ...DEFAULT_SETTINGS,
     ...stored,
@@ -34,7 +52,7 @@ export function loadSettings(): Settings {
 }
 
 export function saveSettings(patch: Partial<Settings>): Settings {
-  const next = { ...loadSettings(), ...patch };
+  const next = { ...loadSettings(), ...pickKnown(patch) };
   writeJson(PATHS.settings, next);
   return next;
 }

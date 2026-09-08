@@ -2,7 +2,7 @@ import type { BrowserContext } from "playwright";
 import type { NaverAccount } from "../types.js";
 import { PATHS } from "../paths.js";
 import { setAccount } from "../store/db.js";
-import { naverContext } from "./browser.js";
+import { naverContext, withProfile } from "./browser.js";
 import { hasLoginCookies, readBlogIdentity } from "./session.js";
 
 const LOGIN_URL = "https://nid.naver.com/nidlogin.login?mode=form&url=https%3A%2F%2Fwww.naver.com";
@@ -67,7 +67,7 @@ async function runLogin(report: Reporter, timeoutMs: number): Promise<NaverAccou
 /** Only one login window at a time. */
 export function login(report: Reporter = () => {}, timeoutMs = DEFAULT_TIMEOUT_MS): Promise<NaverAccount> {
   if (inFlight) return inFlight;
-  inFlight = runLogin(report, timeoutMs).finally(() => {
+  inFlight = withProfile("login", () => runLogin(report, timeoutMs)).finally(() => {
     inFlight = null;
   });
   return inFlight;

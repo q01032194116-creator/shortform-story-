@@ -2,7 +2,7 @@ import type { BrowserContext } from "playwright";
 import type { NaverAccount } from "../types.js";
 import { PATHS } from "../paths.js";
 import { getAccount, setAccount } from "../store/db.js";
-import { clearProfile, naverContext } from "./browser.js";
+import { clearProfile, naverContext, withProfile } from "./browser.js";
 
 /** Naver sets both cookies only for a fully authenticated session. */
 export async function hasLoginCookies(context: BrowserContext): Promise<boolean> {
@@ -41,6 +41,10 @@ export async function readBlogIdentity(
 
 /** Check the saved session without showing a window. */
 export async function checkSession(): Promise<NaverAccount> {
+  return withProfile("session-check", runCheck);
+}
+
+async function runCheck(): Promise<NaverAccount> {
   let context: BrowserContext | null = null;
   try {
     context = await naverContext(true);
@@ -63,6 +67,8 @@ export async function checkSession(): Promise<NaverAccount> {
     setAccount(account);
     return account;
   } catch {
+    // A crashed check says nothing about the session. Report what we last knew
+    // rather than persisting a false "logged out".
     return { ...getAccount(), checkedAt: new Date().toISOString() };
   } finally {
     await context?.close().catch(() => {});
