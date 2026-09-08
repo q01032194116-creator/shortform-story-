@@ -41,3 +41,9 @@ next-env.d.ts
 /.wrangler/
 /outputs/
 /work/
+
+# naver-auto local tool (runtime state never leaves the machine)
+/naver-auto/node_modules/
+/naver-auto/dist/
+/naver-auto/data/
+/naver-auto/.env
