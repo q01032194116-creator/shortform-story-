@@ -1,98 +1,149 @@
-# vinext-starter
+# 네이버 블로그 오토파일럿
 
-A clean full-stack starter running on
-[vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
-Drizzle support.
+관심 분야를 넣으면 **글감 발굴 → 본문 작성 → 이미지 수집·AI 심사 → 네이버 블로그 자동 발행**까지
+한 번에 도는 로컬 웹 대시보드입니다.
 
-## Prerequisites
+AI 는 Claude Code CLI 를 `claude -p` 로 호출합니다. API 키 종량제가 아니라
+**CLI 에 로그인된 구독 요금제를 그대로** 씁니다.
 
-- Node.js `>=22.13.0`
+---
 
-## Quick Start
+## 동작 흐름
+
+| 단계 | 하는 일 | 쓰는 것 |
+| --- | --- | --- |
+| 1. 수집 | 네이버 뉴스 + 인기 블로그 글을 긁어와 본문까지 읽음 | Playwright |
+| 2. 글감 | 수집 자료에서 지금 쓸 만한 글감 5개를 근거와 함께 추천 | `claude -p` |
+| 3. 작성 | 자료의 사실만 뽑아 완전히 새 문장으로 블로그 글을 씀 | `claude -p` |
+| 4. 이미지 | 네이버 이미지 검색 → 후보 다운로드 → **AI 가 직접 보고** 한 장 선택 | Playwright + `claude -p` (vision) |
+| 5. 발행 | 스마트에디터에 제목·본문·이미지 입력, 서식 적용 후 발행 | Playwright |
+
+**이미지 심사**가 이 도구의 핵심입니다. 검색 결과를 그냥 쓰지 않고 AI 가 후보를 전부 열어 본 뒤
+워터마크·카드뉴스·상품 캡처·인물 클로즈업·저화질을 걸러냅니다.
+조건에 맞는 사진이 하나도 없으면 **억지로 넣지 않고 그 자리를 비웁니다.**
+
+---
+
+## 설치
 
 ```bash
-npm install
-npm run dev
-npm run build
+npm install          # Chromium 이 없으면 자동으로 설치합니다
+npm run dev          # http://localhost:5173
 ```
 
-This starter does not use `wrangler.jsonc`.
+Chromium 자동 설치가 네트워크 문제로 실패하면 나중에 직접 실행하세요:
 
-## Included Shape
+```bash
+npx playwright install chromium
+```
 
-- edit site code under `app/`
-- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
-- `vite.config.ts` simulates declared bindings for local development
-- `db/schema.ts` starts intentionally empty
-- `examples/d1/` contains an optional D1 example surface
-- `drizzle.config.ts` supports local migration generation when needed
+전제 조건:
 
-## Workspace Auth Headers
+- Node.js 20.10 이상
+- [Claude Code CLI](https://claude.ai/code) 가 설치되어 있고 **로그인되어 있을 것**
+  (터미널에서 `claude -p "안녕"` 이 답을 뱉으면 준비 완료)
 
-OpenAI workspace sites can read the current user's email from
-`oai-authenticated-user-email`.
+프로덕션 실행:
 
-SIWC-authenticated workspace sites may also receive
-`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
-`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
-`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
+```bash
+npm run build && npm start   # http://localhost:8787
+```
 
-Treat the full name as optional and fall back to email when it is absent:
+---
 
-```tsx
-import { headers } from "next/headers";
+## 네이버 로그인
 
-export default async function Home() {
-  const requestHeaders = await headers();
-  const email = requestHeaders.get("oai-authenticated-user-email");
-  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
-      "percent-encoded-utf-8"
-      ? decodeURIComponent(encodedFullName)
-      : null;
+대시보드 우측 상단 **네이버 로그인** 버튼을 누르면 브라우저 창이 뜹니다.
+거기서 **직접** 아이디·비밀번호·2단계 인증을 입력하세요.
 
-  const displayName = fullName ?? email;
-  // ...
+- 이 앱은 비밀번호를 받지도, 저장하지도, 대신 입력하지도 않습니다.
+- 로그인이 끝나면 쿠키만 `data/naver-session.json` 에 저장돼 다음부터 재사용됩니다.
+- 세션이 만료되면 발행 시 안내가 뜨고, 다시 로그인하면 됩니다.
+- `세션 삭제` 버튼으로 언제든 지울 수 있습니다.
+
+---
+
+## 처음 실행할 때
+
+1. **설정**에서 관심 분야와 블로그 아이디를 채웁니다 (아이디는 로그인 시 자동 감지 시도).
+2. `발행 시 브라우저 창 숨기기`는 **꺼둔 채로** 첫 발행을 돌려서 눈으로 확인하세요.
+3. `승인 없이 발행까지 자동 진행`을 끄면 초안까지만 만들고 멈춥니다.
+   미리보기로 확인한 뒤 `지금 발행`을 눌러도 됩니다.
+
+---
+
+## 계정 보호
+
+네이버는 자동화된 대량 발행을 어뷰징으로 봅니다. 기본값으로 제한이 걸려 있습니다.
+
+| 설정 | 기본값 | 의미 |
+| --- | --- | --- |
+| `하루 최대 발행` | 3 | 넘으면 실행 자체가 막힙니다 |
+| `발행 간격(분)` | 90 | 직전 발행 후 이 시간이 지나야 합니다 |
+
+입력도 사람처럼 한 글자씩 타이핑하고, 수집 요청 사이에도 간격을 둡니다.
+한도를 크게 올리는 것은 권하지 않습니다.
+
+---
+
+## 네이버 DOM 이 바뀌어서 실패할 때
+
+네이버 검색 결과와 스마트에디터는 클래스명이 수시로 바뀝니다. 그래서
+
+- 셀렉터를 **여러 후보로 두고 순차 시도**하고, 검색 수집은 링크 기준 범용 폴백까지 둡니다.
+- 단계마다 스크린샷을 `data/debug/<시각>_<작업>/` 에 남깁니다.
+- 코드를 고치지 않고 **`data/selectors.json`** 으로 셀렉터를 덮어쓸 수 있습니다.
+
+```jsonc
+// data/selectors.json — 여기 적은 후보를 먼저 시도하고, 기본값은 폴백으로 남습니다
+{
+  "publishConfirm": ["button.새로바뀐클래스명"],
+  "tagInput": ["input#new-tag-field"]
 }
 ```
 
-## Optional Dispatch-Owned ChatGPT Sign-In
+키 목록은 `server/naver/selectors.ts` 의 `SelectorSet` 를 보세요.
+실패하면 콘솔에 어떤 요소를 못 찾았는지 이름이 찍힙니다.
 
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
-optional or required ChatGPT sign-in:
+---
 
-- Use `getChatGPTUser()` for optional signed-in UI.
-- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send
-  anonymous visitors through Sign in with ChatGPT.
-- Use `chatGPTSignInPath(returnTo)` and `chatGPTSignOutPath(returnTo)` for
-  browser links or actions.
-- Pass a same-origin relative `returnTo` path for the destination after sign-in
-  or sign-out. The helper validates and safely encodes it.
-- Mark protected pages with `export const dynamic = "force-dynamic"` because
-  they depend on per-request identity headers.
+## 저작권·약관 주의
 
-Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the
-OAuth cookies, and identity header injection. Do not implement app routes for
-those reserved paths. Routes that do not import and call the helper remain
-anonymous-compatible.
+- **이미지는 네이버 이미지 검색 결과**에서 가져옵니다. 검색으로 나온 사진 대부분은
+  제3자에게 저작권이 있고, 블로그에 올리는 것은 원칙적으로 저작권자의 허락이 필요합니다.
+  상업적으로 운영하는 블로그라면 무료 스톡(Unsplash·Pexels·Pixabay)이나 직접 촬영한 사진으로
+  바꾸는 것을 권합니다. 선택된 이미지의 출처 URL 은 초안에 `sourceUrl` 로 남습니다.
+- 본문은 수집 자료를 **그대로 옮기지 않고** 사실만 뽑아 새로 쓰도록 프롬프트를 걸어 두었지만,
+  발행 전에 한 번 읽어 보는 것을 권합니다.
+- 자동 로그인·자동 발행은 네이버 이용약관상 회색지대입니다. 본인 계정에 한해,
+  사람이 쓰는 수준의 빈도로 쓰세요.
 
-SIWC establishes identity only; it does not prove workspace membership. Use the
-Sites hosting platform's access policy controls for workspace-wide restrictions,
-or enforce explicit server-side membership or allowlist checks.
+---
 
-Use SIWC for account pages, user-specific dashboards, saved records, and write
-actions tied to the current ChatGPT user. Leave public content anonymous.
+## 구조
 
-## Useful Commands
+```
+server/
+  index.ts              Express API + SSE 진행 상황 스트림
+  config.ts             설정 스키마와 기본값
+  store.ts              JSON 파일 저장소 (글감·초안·발행 이력)
+  ai/claude.ts          claude -p 서브프로세스 호출, JSON 추출
+  ai/prompts.ts         글감·작성·이미지심사 프롬프트
+  naver/browser.ts      Playwright 컨텍스트, 세션, 스크린샷
+  naver/login.ts        사용자가 직접 하는 로그인 + 세션 저장
+  naver/collect.ts      뉴스·블로그 수집 (다중 셀렉터 + 범용 폴백)
+  naver/images.ts       이미지 검색·다운로드·AI 심사
+  naver/publish.ts      스마트에디터 자동 입력·서식·발행
+  naver/selectors.ts    셀렉터 정의 (data/selectors.json 으로 덮어쓰기 가능)
+  pipeline/run.ts       전 과정 오케스트레이션 + 발행 한도
+web/                    React 대시보드
+data/                   세션·설정·이미지·스크린샷 (git 에 올라가지 않음)
+```
 
-- `npm run dev`: start local development
-- `npm run build`: verify the vinext build output
-- `npm test`: build the starter and verify its rendered loading skeleton
-- `npm run db:generate`: generate Drizzle migrations after schema changes
+## 환경 변수
 
-## Learn More
-
-- [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+| 이름 | 용도 |
+| --- | --- |
+| `PORT` | API 포트 (기본 8787) |
+| `NBA_DATA_DIR` | `data/` 위치 변경 |
+| `NBA_CHROME_PATH` | 시스템에 있는 Chrome/Chromium 을 쓰고 싶을 때 실행 파일 경로 |
