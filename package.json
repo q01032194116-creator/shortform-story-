@@ -14,7 +14,8 @@
     "build": "tsc -p tsconfig.server.json --noEmit && vite build",
     "start": "cross-env NODE_ENV=production tsx server/index.ts",
     "typecheck": "tsc -p tsconfig.server.json --noEmit && tsc -p web/tsconfig.json --noEmit",
-    "setup": "node scripts/ensure-browser.mjs"
+    "setup": "node scripts/ensure-browser.mjs",
+    "test": "node --import tsx --test tests/*.test.ts"
   },
   "dependencies": {
     "express": "4.21.2",

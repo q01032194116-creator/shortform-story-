@@ -11,7 +11,7 @@ type Hit = { title: string; url: string; press?: string; snippet?: string };
  * 네이버 검색 결과 DOM 은 자주 바뀝니다.
  * 그래서 알려진 셀렉터를 먼저 시도하고, 실패하면 "링크 자체"를 기준으로 긁는 범용 방식으로 떨어집니다.
  */
-async function scrapeSearch(page: Page, url: string, kind: "news" | "blog", limit: number): Promise<Hit[]> {
+export async function scrapeSearch(page: Page, url: string, kind: "news" | "blog", limit: number): Promise<Hit[]> {
   await page.goto(url, { waitUntil: "domcontentloaded" });
   await sleep(1200);
   await page.mouse.wheel(0, 2000);

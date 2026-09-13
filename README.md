@@ -105,6 +105,31 @@ npm run build && npm start   # http://localhost:8787
 키 목록은 `server/naver/selectors.ts` 의 `SelectorSet` 를 보세요.
 실패하면 콘솔에 어떤 요소를 못 찾았는지 이름이 찍힙니다.
 
+### 수집 로직 테스트
+
+네이버 DOM 을 흉내 낸 모의 페이지로 수집·추출 로직을 검증합니다.
+실제 네이버에 접속하지 않으므로 네트워크 없이 돌아갑니다.
+
+```bash
+npm test
+```
+
+클래스명이 전부 바뀐 상황을 가정한 폴백 테스트가 들어 있습니다.
+셀렉터를 손본 뒤에는 이걸 돌려서 폴백이 살아 있는지 확인하세요.
+
+---
+
+## 자주 나오는 오류
+
+| 메시지 | 원인과 해결 |
+| --- | --- |
+| `claude 실행에 실패했습니다` | 터미널에서 `claude -p "안녕"` 부터 확인하세요. 안 되면 `npm install -g @anthropic-ai/claude-code` 후 `claude` 로 로그인 |
+| `__name is not defined` | 해결된 버그입니다. 다시 보이면 `git pull` 로 최신 코드를 받으세요 |
+| `검색 결과를 하나도 읽지 못했습니다` | 네이버 검색 DOM 변경. `data/debug` 의 스크린샷을 확인하세요 |
+| `~ 요소를 찾지 못했습니다` | 스마트에디터 DOM 변경. `data/selectors.json` 으로 교정하세요 |
+| `네이버 로그인 세션이 만료되었습니다` | 대시보드에서 다시 로그인하면 됩니다 |
+| `EADDRINUSE` | 포트 충돌. `PORT=9000 npm run dev` 로 바꿔 실행 |
+
 ---
 
 ## 저작권·약관 주의
@@ -139,6 +164,17 @@ server/
 web/                    React 대시보드
 data/                   세션·설정·이미지·스크린샷 (git 에 올라가지 않음)
 ```
+
+## 명령어
+
+| 명령 | 하는 일 |
+| --- | --- |
+| `npm run dev` | 개발 모드 실행 (대시보드 5173, API 8787) |
+| `npm test` | 모의 페이지로 수집 로직 검증 |
+| `npm run typecheck` | 서버·대시보드 타입 검사 |
+| `npm run build` | 프로덕션 빌드 |
+| `npm start` | 빌드 결과 실행 (8787) |
+| `npm run setup` | Chromium 재설치 |
 
 ## 환경 변수
 

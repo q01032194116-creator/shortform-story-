@@ -41,6 +41,14 @@ export async function openBrowser(options: { headless?: boolean; useSession?: bo
     Object.defineProperty(navigator, "webdriver", { get: () => false });
   });
 
+  // tsx(esbuild) 는 keepNames 옵션 때문에 함수를 __name(fn, "이름") 으로 감쌉니다.
+  // 그 헬퍼는 Node 쪽에만 있는데 page.evaluate 는 함수 소스를 브라우저에서 실행하므로
+  // 브라우저에도 같은 이름의 통과 함수를 심어 두지 않으면 ReferenceError 가 납니다.
+  await context.addInitScript(() => {
+    const g = globalThis as unknown as Record<string, unknown>;
+    if (typeof g.__name !== "function") g.__name = (fn: unknown) => fn;
+  });
+
   context.setDefaultTimeout(30_000);
   const page = await context.newPage();
   return { browser, context, page };

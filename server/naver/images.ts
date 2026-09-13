@@ -12,20 +12,17 @@ const log = logger("images");
 
 type Candidate = { url: string; file: string };
 
-/**
- * 네이버 이미지 검색 결과에서 원본 이미지 URL 목록을 뽑습니다.
- * 썸네일은 `search.pstatic.net/common/?src=<원본URL>` 형태라 src 파라미터를 디코딩하면 원본을 얻을 수 있습니다.
- */
-async function searchImageUrls(page: Page, query: string, want: number): Promise<string[]> {
-  const url = `https://search.naver.com/search.naver?where=image&query=${encodeURIComponent(query)}&res_fr=780&res_to=1000000`;
-  await page.goto(url, { waitUntil: "domcontentloaded" });
-  await sleep(1200);
-  for (let i = 0; i < 3; i++) {
-    await page.mouse.wheel(0, 1800);
-    await sleep(700);
-  }
-  await shot(page, `image-search-${query.slice(0, 12)}`);
+/** 이미지 검색 주소. res_fr 로 일정 해상도 이상만 거릅니다. */
+export function imageSearchUrl(query: string): string {
+  return `https://search.naver.com/search.naver?where=image&query=${encodeURIComponent(query)}&res_fr=780&res_to=1000000`;
+}
 
+/**
+ * 현재 열려 있는 검색 결과 페이지에서 원본 이미지 URL 을 뽑습니다.
+ * 네이버 썸네일은 `search.pstatic.net/common/?src=<원본URL>` 형태라
+ * src 파라미터를 디코딩하면 원본을 얻을 수 있습니다.
+ */
+export async function extractImageUrls(page: Page): Promise<string[]> {
   return page.evaluate(() => {
     const out: string[] = [];
     const seen = new Set<string>();
@@ -56,7 +53,19 @@ async function searchImageUrls(page: Page, query: string, want: number): Promise
     });
 
     return out;
-  }).then((urls) => urls.slice(0, want * 3));
+  });
+}
+
+/** 네이버 이미지 검색을 열고 스크롤해 후보 URL 을 모읍니다. */
+async function searchImageUrls(page: Page, query: string, want: number): Promise<string[]> {
+  await page.goto(imageSearchUrl(query), { waitUntil: "domcontentloaded" });
+  await sleep(1200);
+  for (let i = 0; i < 3; i++) {
+    await page.mouse.wheel(0, 1800);
+    await sleep(700);
+  }
+  await shot(page, `image-search-${query.slice(0, 12)}`);
+  return (await extractImageUrls(page)).slice(0, want * 3);
 }
 
 /** 후보 이미지를 내려받습니다. 이미지가 아니거나 너무 작으면 버립니다. */
