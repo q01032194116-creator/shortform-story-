@@ -127,20 +127,23 @@ async function insertImage(
 ) {
   if (!block.file) return;
 
-  const chooserPromise = page.waitForEvent("filechooser", { timeout: 15_000 });
+  // .catch 를 즉시 붙여 둡니다. 사진 버튼을 못 찾아 아래에서 return 해 버리면
+  // 이 Promise 를 아무도 기다리지 않게 되고, 15초 뒤 거부되면서
+  // 처리되지 않은 Promise 거부로 서버 프로세스 전체가 죽습니다.
+  const chooserPromise = page.waitForEvent("filechooser", { timeout: 15_000 }).catch(() => null);
+
   const clicked = await clickFirst(frame, selectors.toolbarImage, "사진 버튼", false);
   if (!clicked) {
     log.warn("사진 버튼을 찾지 못해 이미지를 건너뜁니다.");
     return;
   }
 
-  try {
-    const chooser = await chooserPromise;
-    await chooser.setFiles(block.file);
-  } catch {
+  const chooser = await chooserPromise;
+  if (!chooser) {
     log.warn("파일 선택 창이 뜨지 않아 이미지를 건너뜁니다.");
     return;
   }
+  await chooser.setFiles(block.file);
 
   // 업로드가 끝나 이미지 컴포넌트가 붙을 때까지 기다립니다.
   await frame

@@ -8,18 +8,25 @@ export default function App() {
   const [drafts, setDrafts] = useState<Draft[]>([]);
   const [keyword, setKeyword] = useState("");
   const [error, setError] = useState("");
+  const [connected, setConnected] = useState(true);
   const [openDraft, setOpenDraft] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
     try {
       const next = await api.status();
       setStatus(next);
+      // 서버가 가진 로그로 갈아끼웁니다. 재연결 시 화면에 남은 옛 로그를 치우기 위함입니다.
       setLogs(next.logs);
       if (!keyword && next.settings.keywords[0]) setKeyword(next.settings.keywords[0]);
       setTopics(await api.topics());
       setDrafts(await api.drafts());
+      setConnected(true);
+      return true;
     } catch (err) {
-      setError((err as Error).message);
+      // fetch 자체가 실패하면 서버가 안 떠 있는 것입니다. 앱 오류와 구분해서 다룹니다.
+      if (err instanceof TypeError) setConnected(false);
+      else setError((err as Error).message);
+      return false;
     }
   }, [keyword]);
 
@@ -27,6 +34,10 @@ export default function App() {
     void refresh();
     // 서버가 흘려보내는 진행 상황을 실시간으로 받습니다.
     const source = new EventSource("/api/events");
+    source.addEventListener("open", () => {
+      setConnected(true);
+      void refresh();
+    });
     source.addEventListener("log", (e) => {
       setLogs((prev) => [...prev, JSON.parse((e as MessageEvent).data) as LogEvent].slice(-400));
     });
@@ -35,7 +46,18 @@ export default function App() {
       setStatus((prev) => (prev ? { ...prev, busy: state.busy, busyLabel: state.label } : prev));
       if (!state.busy) void refresh();
     });
-    return () => source.close();
+    // EventSource 는 스스로 재접속하지만, 끊긴 동안은 화면에 그 사실을 알려 줍니다.
+    source.addEventListener("error", () => setConnected(false));
+
+    // 서버가 꺼졌다 켜지면 알아서 복구되도록 주기적으로 확인합니다.
+    const poll = setInterval(() => {
+      void refresh();
+    }, 5000);
+
+    return () => {
+      source.close();
+      clearInterval(poll);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -51,7 +73,11 @@ export default function App() {
   };
 
   if (!status) {
-    return <div className="app"><p className="muted">서버에 연결하는 중...</p></div>;
+    return (
+      <div className="app">
+        {connected ? <p className="muted">서버에 연결하는 중...</p> : <Disconnected />}
+      </div>
+    );
   }
 
   const busy = status.busy;
@@ -78,7 +104,8 @@ export default function App() {
         </div>
       </header>
 
-      {error ? <div className="banner error">{error}</div> : null}
+      {!connected ? <Disconnected /> : null}
+      {connected && error ? <div className="banner error">{error}</div> : null}
       {status.limitMessage ? <div className="banner warn">{status.limitMessage}</div> : null}
       {busy ? <div className="banner warn">실행 중: {status.busyLabel}</div> : null}
 
@@ -108,6 +135,21 @@ export default function App() {
             onPublish={(id) => guard(() => api.publish(id))}
           />
         </div>
+      </div>
+    </div>
+  );
+}
+
+/** 서버가 안 떠 있을 때. "Failed to fetch" 만으로는 무엇을 해야 할지 알 수 없습니다. */
+function Disconnected() {
+  return (
+    <div className="banner error">
+      <strong>서버에 연결할 수 없습니다.</strong>
+      <div style={{ marginTop: 6, lineHeight: 1.7 }}>
+        앱을 실행한 터미널이 꺼졌거나 서버가 멈췄습니다. 터미널에서 <code>npm run dev</code> 가
+        돌고 있는지 확인하세요. 터미널에 오류가 찍혀 있다면 그 내용이 원인입니다.
+        <br />
+        서버가 다시 뜨면 이 화면은 자동으로 복구됩니다.
       </div>
     </div>
   );

@@ -167,6 +167,24 @@ if (fs.existsSync(webDist)) {
   app.get("*", (_req, res) => res.sendFile(path.join(webDist, "index.html")));
 }
 
+/**
+ * 로컬 도구 서버가 조용히 죽는 것이 가장 나쁜 결과입니다.
+ * (대시보드에는 "Failed to fetch" 만 뜨고 원인은 어디에도 남지 않습니다.)
+ * 예상 못 한 오류는 크게 남기고 서버는 살려 둡니다.
+ */
+process.on("unhandledRejection", (reason) => {
+  const err = reason instanceof Error ? reason : new Error(String(reason));
+  serverLog.error(`처리되지 않은 오류: ${err.message}`);
+  if (err.stack) console.error(err.stack);
+  serverLog.warn("서버는 계속 실행됩니다. 이 오류가 반복되면 위 내용을 알려 주세요.");
+});
+
+process.on("uncaughtException", (err) => {
+  serverLog.error(`예기치 못한 오류: ${err.message}`);
+  if (err.stack) console.error(err.stack);
+  serverLog.warn("서버는 계속 실행됩니다. 이 오류가 반복되면 위 내용을 알려 주세요.");
+});
+
 app.listen(PORT, () => {
   serverLog.info(`대시보드 API 준비 완료 → http://localhost:${PORT}`);
   if (!fs.existsSync(webDist)) {
