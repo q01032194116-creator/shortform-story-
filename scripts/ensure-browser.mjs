@@ -25,7 +25,11 @@ if (path && existsSync(path)) {
 
 console.log(`${label} Chromium 을 설치합니다. 처음 한 번만 몇 분 걸립니다...`);
 try {
-  execFileSync("npx", ["playwright", "install", "chromium"], { stdio: "inherit" });
+  // Windows 에서 npx 는 npx.cmd 셔임이므로 shell 을 거쳐야 실행됩니다.
+  execFileSync("npx", ["playwright", "install", "chromium"], {
+    stdio: "inherit",
+    shell: process.platform === "win32",
+  });
   console.log(`${label} Chromium 설치 완료.`);
 } catch {
   console.warn(

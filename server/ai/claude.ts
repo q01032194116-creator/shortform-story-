@@ -4,6 +4,13 @@ import { logger } from "../util/log.js";
 
 const log = logger("claude");
 
+const IS_WINDOWS = process.platform === "win32";
+
+/** shell 로 실행할 때 공백·특수문자가 든 인자를 안전하게 감쌉니다. */
+function quoteForShell(arg: string): string {
+  return /[\s"&|<>^()]/.test(arg) ? `"${arg.replace(/"/g, '""')}"` : arg;
+}
+
 export type ClaudeOptions = {
   /** 첨부할 이미지 파일의 절대경로. Read 도구로 모델이 직접 열어 봅니다. */
   images?: string[];
@@ -41,10 +48,13 @@ export async function runClaude(prompt: string, options: ClaudeOptions = {}): Pr
   const startedAt = Date.now();
 
   const raw = await new Promise<string>((resolve, reject) => {
-    const child = spawn("claude", args, {
+    // Windows 의 npm 전역 명령은 claude.cmd 셔임이라 shell 없이는 spawn 되지 않습니다.
+    // shell 을 쓰면 인자가 하나의 명령줄로 합쳐지므로 공백이 든 경로는 직접 따옴표로 묶습니다.
+    const child = spawn("claude", IS_WINDOWS ? args.map(quoteForShell) : args, {
       cwd: ROOT,
       stdio: ["pipe", "pipe", "pipe"],
       env: process.env,
+      shell: IS_WINDOWS,
     });
 
     let stdout = "";
@@ -60,7 +70,8 @@ export async function runClaude(prompt: string, options: ClaudeOptions = {}): Pr
       clearTimeout(timer);
       reject(
         new Error(
-          `claude 실행에 실패했습니다. Claude Code CLI 가 설치되어 있고 로그인돼 있는지 확인하세요 (원인: ${err.message})`,
+          `claude 실행에 실패했습니다. 터미널에서 \`claude -p "안녕"\` 이 동작하는지 확인하세요. ` +
+            `설치: npm install -g @anthropic-ai/claude-code (원인: ${err.message})`,
         ),
       );
     });
