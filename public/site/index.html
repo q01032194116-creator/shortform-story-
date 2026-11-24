@@ -50,12 +50,12 @@
 
         /* Hero */
         .hero { position: relative; isolation: isolate; min-height: clamp(560px, calc(100vh - 200px), 720px); padding-top: 6rem; padding-bottom: 7.5rem; text-align: left; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; overflow: visible; clip-path: inset(0 -100vw); }
-        .hero::before { content: ''; position: absolute; top: -6%; bottom: -6%; left: 50%; width: 100vw; transform: translate3d(-50%,0,0) scale(1.04); transform-origin: 72% 55%; z-index: -2; background: var(--bg-canvas) url('hero-bg-creator-camera-v10.jpg') 70% 22% / cover no-repeat; filter: brightness(1.02) saturate(1.05); animation: hero-camera-move 18s cubic-bezier(0.42,0,0.58,1) infinite alternate both; will-change: transform; backface-visibility: hidden; }
+        .hero::before { content: ''; position: absolute; top: -6%; bottom: -6%; left: 50%; width: 100vw; transform: translate3d(-50%,0,0) scale(1.04); transform-origin: 72% 55%; z-index: -2; background: var(--bg-canvas) url('hero-bg-creator-camera-v11.jpg') 70% 22% / cover no-repeat; filter: brightness(1.02) saturate(1.05); animation: hero-camera-move 10s ease-in-out infinite alternate both; will-change: transform; backface-visibility: hidden; }
         .hero::after { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%); z-index: -1; background: linear-gradient(90deg, rgba(7,20,47,0.94) 0%, rgba(7,20,47,0.86) 28%, rgba(7,20,47,0.6) 44%, rgba(7,20,47,0.22) 60%, rgba(7,20,47,0) 76%), linear-gradient(0deg, rgba(7,20,47,0.75) 0%, rgba(7,20,47,0) 22%); }
         @keyframes hero-camera-move {
-            0% { transform: translate3d(-50%,0,0) scale(1.04); }
-            50% { transform: translate3d(-51.2%,-0.8%,0) scale(1.09); }
-            100% { transform: translate3d(-49.2%,0.6%,0) scale(1.12); }
+            0% { transform: translate3d(-50%,0,0) scale(1.03); }
+            50% { transform: translate3d(-50.4%,-0.3%,0) scale(1.045); }
+            100% { transform: translate3d(-49.7%,0.2%,0) scale(1.06); }
         }
         .hero > *:not(.hero-geometry) { position: relative; z-index: 2; }
         .hero-geometry { display: none; position: absolute; inset: 0 calc(50% - 50vw); z-index: 1; overflow: hidden; pointer-events: none; }
@@ -252,6 +252,8 @@
         .input-group input:focus, .input-group textarea:focus, .input-group select:focus { border-color: var(--primary); }
         .practice-note { display: none; margin-top: 1rem; padding: 1rem 1.1rem; border-radius: var(--border-radius); background: rgba(79,216,196,0.1); border: 1px solid rgba(79,216,196,0.45); font-size: 0.88rem; line-height: 1.6; }
         .practice-note.show { display: block; }
+        .consent { display: flex; gap: 0.55rem; align-items: flex-start; margin: 0.2rem 0 0.9rem; font-size: 0.78rem; color: var(--text-secondary); line-height: 1.5; cursor: pointer; }
+        .consent input { margin-top: 0.2rem; accent-color: #4FD8C4; flex-shrink: 0; }
         .practice-note strong { color: var(--accent); display: block; margin-bottom: 0.2rem; }
 
         /* Mobile sticky CTA */
@@ -666,13 +668,17 @@
                         <a href="https://open.kakao.com/o/sHJEnMDc" target="_blank" rel="noopener" class="contact-chip" data-cta="kakao">💬 카카오톡 상담</a><a href="tel:010-3219-4116" class="contact-chip" data-cta="tel">📞 010-3219-4116</a>
                     </div>
                 </div>
-                <form class="form-box reveal" id="diagnosis-form" novalidate>
+                <form class="form-box reveal" id="diagnosis-form" action="https://formsubmit.co/q01032194116@gmail.com" method="POST">
+                    <input type="hidden" name="_subject" value="[숏폼스토리] 무료 성장전략진단 신청이 도착했습니다">
+                    <input type="hidden" name="_template" value="table">
+                    <input type="hidden" name="_next" value="https://shortform-story.vercel.app/?submitted=1#apply">
+                    <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
                     <div class="form-header-row"><span>무료 성장전략진단</span><span>약 1분</span></div>
                     <h4 class="form-title">무료 성장전략진단 신청</h4>
                     <p class="form-desc">아래 사전 질문에 답해 주시면 현재 상황에 맞춰 상담을 준비합니다.</p>
                     <div class="input-row">
-                        <div class="input-group"><label for="f-name">성함 또는 기업명</label><input id="f-name" name="name" type="text" placeholder="홍길동 / 숏폼상사"></div>
-                        <div class="input-group"><label for="f-phone">연락처</label><input id="f-phone" name="phone" type="tel" placeholder="010-0000-0000"></div>
+                        <div class="input-group"><label for="f-name">성함 또는 기업명</label><input id="f-name" name="name" type="text" placeholder="홍길동 / 숏폼상사" required></div>
+                        <div class="input-group"><label for="f-phone">연락처</label><input id="f-phone" name="phone" type="tel" placeholder="010-0000-0000" required></div>
                     </div>
                     <div class="input-row">
                         <div class="input-group"><label for="f-biz">업종</label><input id="f-biz" name="business" type="text" placeholder="예: 카페, 학원, 쇼핑몰"></div>
@@ -695,10 +701,11 @@
                         </select>
                     </div>
                     <div class="input-group"><label for="f-msg">현재 운영 중인 채널과 고민</label><textarea id="f-msg" name="message" placeholder="예: 인스타그램은 운영 중인데 문의로 이어지지 않아요."></textarea></div>
+                    <label class="consent"><input type="checkbox" name="개인정보 수집·이용 동의" value="동의함" required> <span>[필수] 무료 성장전략진단 상담 안내를 위해 이름·연락처·업종·상담 내용을 수집·이용하는 데 동의합니다.</span></label>
                     <button type="submit" class="btn btn-primary" style="width:100%;margin-top:0.5rem;" data-cta="form-submit">무료 성장전략진단 신청하기</button>
-                    <div class="practice-note" id="practice-note" role="status" aria-live="polite">
-                        <strong>연습용 페이지입니다</strong>
-                        지금은 실제 신청이 접수되지 않습니다. 입력한 내용은 저장되거나 전송되지 않았어요. 바로 상담이 필요하시면 카카오톡 상담 또는 010-3219-4116으로 연락해 주세요.
+                    <div class="practice-note" id="submit-note" role="status" aria-live="polite">
+                        <strong>신청이 접수되었습니다</strong>
+                        남겨주신 내용을 확인한 뒤 연락드리겠습니다. 바로 상담이 필요하시면 카카오톡 상담 또는 010-3219-4116으로 연락해 주세요.
                     </div>
                 </form>
             </div>
@@ -733,11 +740,10 @@
         });
     });
 
-    // 연습용: 실제 전송·저장 없이 안내만 표시
-    document.getElementById('diagnosis-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        document.getElementById('practice-note').classList.add('show');
-    });
+    // 신청 완료 후 돌아오면 접수 안내 표시
+    if (new URLSearchParams(location.search).get('submitted') === '1') {
+        document.getElementById('submit-note').classList.add('show');
+    }
     </script>
 </body>
 </html>
