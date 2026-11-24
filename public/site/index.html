@@ -49,11 +49,16 @@
         .nav-cta:hover { color: #FFFFFF; background: var(--bg-canvas); }
 
         /* Hero */
-        .hero { position: relative; isolation: isolate; min-height: clamp(560px, calc(100vh - 200px), 720px); padding-top: 6rem; padding-bottom: 7.5rem; text-align: left; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; overflow: hidden; }
-        .hero::before { content: ''; position: absolute; top: -10%; bottom: -10%; left: 50%; width: 118vw; transform: translate3d(-51%,0.4%,0) perspective(1050px) rotateY(-6deg) rotateX(0.6deg) scale(1.08); transform-origin: 76% 50%; z-index: -2; background: var(--bg-canvas) url('hero-bg-ai-camera-motion-v4.png') 68% center / 80% auto no-repeat; filter: brightness(0.82) saturate(1.04); animation: hero-camera-turn 24s cubic-bezier(0.42,0,0.58,1) infinite alternate both; will-change: transform; backface-visibility: hidden; -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.2) 10%, #000 32%, #000 100%); mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.2) 10%, #000 32%, #000 100%); }
-        .hero::after { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%); z-index: -1; background: linear-gradient(90deg, var(--bg-canvas) 0%, var(--bg-canvas) 25%, rgba(7,20,47,0.97) 38%, rgba(7,20,47,0.82) 52%, rgba(7,20,47,0.42) 70%, rgba(7,20,47,0.12) 88%, rgba(7,20,47,0.06) 100%); }
+        .hero { position: relative; isolation: isolate; min-height: clamp(560px, calc(100vh - 200px), 720px); padding-top: 6rem; padding-bottom: 7.5rem; text-align: left; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; overflow: visible; clip-path: inset(0 -100vw); }
+        .hero::before { content: ''; position: absolute; top: -6%; bottom: -6%; left: 50%; width: 100vw; transform: translate3d(-50%,0,0) scale(1.04); transform-origin: 72% 55%; z-index: -2; background: var(--bg-canvas) url('hero-bg-creator-camera-v10.jpg') 70% 22% / cover no-repeat; filter: brightness(1.02) saturate(1.05); animation: hero-camera-move 18s cubic-bezier(0.42,0,0.58,1) infinite alternate both; will-change: transform; backface-visibility: hidden; }
+        .hero::after { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%); z-index: -1; background: linear-gradient(90deg, rgba(7,20,47,0.94) 0%, rgba(7,20,47,0.86) 28%, rgba(7,20,47,0.6) 44%, rgba(7,20,47,0.22) 60%, rgba(7,20,47,0) 76%), linear-gradient(0deg, rgba(7,20,47,0.75) 0%, rgba(7,20,47,0) 22%); }
+        @keyframes hero-camera-move {
+            0% { transform: translate3d(-50%,0,0) scale(1.04); }
+            50% { transform: translate3d(-51.2%,-0.8%,0) scale(1.09); }
+            100% { transform: translate3d(-49.2%,0.6%,0) scale(1.12); }
+        }
         .hero > *:not(.hero-geometry) { position: relative; z-index: 2; }
-        .hero-geometry { position: absolute; inset: 0 calc(50% - 50vw); z-index: 1; overflow: hidden; pointer-events: none; }
+        .hero-geometry { display: none; position: absolute; inset: 0 calc(50% - 50vw); z-index: 1; overflow: hidden; pointer-events: none; }
         .hero-geometry span { position: absolute; display: block; }
         .geo-orbit { width: 360px; height: 360px; right: 7vw; top: 13%; border: 1px solid rgba(79,216,196,0.34); border-radius: 50%; box-shadow: inset 0 0 0 38px rgba(79,216,196,0.025), inset 0 0 0 88px rgba(252,211,77,0.025); }
         .geo-orbit::before, .geo-orbit::after { content: ''; position: absolute; left: 50%; top: 50%; background: rgba(168,197,232,0.32); transform: translate(-50%,-50%); }
@@ -281,7 +286,8 @@
             .hero h1 { font-size: 2.15rem; }
             .hero { min-height: auto; padding-top: 6rem; padding-bottom: 1.5rem; }
             .hero > .logo-cloud { position: relative; left: auto; bottom: auto; width: 100%; margin: 2rem auto 0; transform: none; }
-            .hero::after { background: linear-gradient(90deg, var(--bg-canvas) 0%, rgba(7,20,47,0.98) 32%, rgba(7,20,47,0.88) 58%, rgba(7,20,47,0.5) 82%, rgba(7,20,47,0.28) 100%); }
+            .hero::before { background-position: 72% center; }
+            .hero::after { background: linear-gradient(90deg, rgba(7,20,47,0.92) 0%, rgba(7,20,47,0.8) 55%, rgba(7,20,47,0.45) 100%); }
             .geo-orbit { width: 240px; height: 240px; right: -80px; opacity: 0.7; }
             .hero-geometry .geo-frame, .hero-geometry .geo-grid { display: none; }
             .section-h2 { font-size: 1.6rem; }
