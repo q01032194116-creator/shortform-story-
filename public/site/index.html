@@ -809,11 +809,15 @@
         btn.disabled = true;
         btn.textContent = '전송 중…';
         try {
+            // 12초 안에 응답이 없으면 기존 방식으로 넘김
+            const ctrl = new AbortController();
+            const timer = setTimeout(() => ctrl.abort(), 12000);
             const res = await fetch('https://formsubmit.co/ajax/q01032194116@gmail.com', {
                 method: 'POST',
                 headers: { 'Accept': 'application/json' },
-                body: new FormData(form)
-            });
+                body: new FormData(form),
+                signal: ctrl.signal
+            }).finally(() => clearTimeout(timer));
             const data = await res.json().catch(() => ({}));
             if (!res.ok || String(data.success) !== 'true') throw new Error(data.message || res.status);
             form.reset();
