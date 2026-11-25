@@ -798,9 +798,11 @@
         toast.classList.remove('show');
     });
 
-    // 신청하기: 누르자마자 첫 화면 이동 + 접수 알림, 메일 전송은 뒤에서 진행
+    // 신청하기: 전송 서비스 설정
+    // Web3Forms 접근 키 (공개되어도 되는 값). 비어 있으면 FormSubmit만 사용
+    const WEB3FORMS_KEY = 'd4fdfb79-83d5-4a8e-b59e-9f2b4bf64ae8';
     const form = document.getElementById('diagnosis-form');
-    // 빠른 전송이 실패했을 때, 저장해 둔 내용으로 기존 방식(FormSubmit 페이지 경유) 재전송
+    // 최후 수단: 기존 방식(FormSubmit 페이지 경유) 재전송
     function fallbackSubmit(entries) {
         const f = document.createElement('form');
         f.method = 'POST';
@@ -814,29 +816,54 @@
         document.body.appendChild(f);
         HTMLFormElement.prototype.submit.call(f);
     }
-    form.addEventListener('submit', (e) => {
+    // 메일 표에 보일 항목 이름
+    const LABELS = { name: '성함 또는 기업명', phone: '연락처', business: '업종', goal: '가장 원하는 목표', package: '관심 있는 패키지', message: '현재 운영 중인 채널과 고민' };
+    async function sendWeb3Forms(entries) {
+        const body = {
+            access_key: WEB3FORMS_KEY,
+            subject: '[숏폼스토리] 무료 성장전략진단 신청이 도착했습니다',
+            from_name: '숏폼스토리 랜딩페이지',
+            botcheck: ''
+        };
+        for (const [k, v] of entries) {
+            if (k.startsWith('_')) { if (k === '_honey' && v) body.botcheck = v; continue; }
+            body[LABELS[k] || k] = v;
+        }
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 15000);
+        try {
+            const res = await fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify(body),
+                signal: ctrl.signal
+            });
+            const j = await res.json().catch(() => ({}));
+            return res.ok && j.success === true;
+        } finally { clearTimeout(timer); }
+    }
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         if (form.dataset.sending === '1') return;
+        const entries = [...new FormData(form).entries()];
+        if (!WEB3FORMS_KEY) { fallbackSubmit(entries); return; }
         form.dataset.sending = '1';
-        const data = new FormData(form);
-        const entries = [...data.entries()];
-        // 1) 바로 접수 안내
-        form.reset();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        showToast();
-        // 2) 뒤에서 메일 전송 (페이지를 떠나도 전송이 이어지도록 keepalive)
-        fetch('https://formsubmit.co/ajax/q01032194116@gmail.com', {
-            method: 'POST',
-            headers: { 'Accept': 'application/json' },
-            body: data,
-            keepalive: true
-        })
-        .then(res => res.json().then(j => ({ ok: res.ok, j })).catch(() => ({ ok: res.ok, j: {} })))
-        .then(({ ok, j }) => {
-            if (!ok || String(j.success) !== 'true') fallbackSubmit(entries);
-        })
-        .catch(() => fallbackSubmit(entries))
-        .finally(() => { form.dataset.sending = ''; });
+        const btn = form.querySelector('button[type=submit]');
+        const label = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = '전송 중…';
+        let ok = false;
+        try { ok = await sendWeb3Forms(entries); } catch (err) { ok = false; }
+        btn.disabled = false;
+        btn.textContent = label;
+        form.dataset.sending = '';
+        if (ok) {
+            form.reset();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showToast();
+        } else {
+            fallbackSubmit(entries);
+        }
     });
 
     // 기존 방식으로 전송된 뒤 첫 화면으로 돌아온 경우에도 알림 표시
