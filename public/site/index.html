@@ -816,19 +816,30 @@
         document.body.appendChild(f);
         HTMLFormElement.prototype.submit.call(f);
     }
-    // 메일 표에 보일 항목 이름
-    const LABELS = { name: '성함 또는 기업명', phone: '연락처', business: '업종', goal: '가장 원하는 목표', package: '관심 있는 패키지', message: '현재 운영 중인 채널과 고민' };
-    async function sendWeb3Forms(entries) {
+    // 신청 메일을 읽기 쉽게 정리 (제목에 핵심 정보, 항목은 번호 순서대로)
+    function buildMailBody(entries) {
+        const v = Object.fromEntries(entries);
+        const val = (k) => (v[k] || '').toString().trim() || '미입력';
+        const now = new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false });
         const body = {
             access_key: WEB3FORMS_KEY,
-            subject: '[숏폼스토리] 무료 성장전략진단 신청이 도착했습니다',
-            from_name: '숏폼스토리 랜딩페이지',
-            botcheck: ''
+            subject: `[숏폼스토리 진단신청] ${val('name')} · ${val('business')} · ${val('package')}`,
+            from_name: '숏폼스토리 신청접수',
+            botcheck: v._honey ? v._honey : '',
+            '① 신청자': val('name'),
+            '② 연락처': val('phone'),
+            '③ 업종': val('business'),
+            '④ 원하는 목표': val('goal'),
+            '⑤ 관심 패키지': val('package'),
+            '⑥ 운영 채널과 고민': val('message'),
+            '⑦ 신청 시각': now + ' (한국시간)',
+            '⑧ 개인정보 동의': v['개인정보 수집·이용 동의'] ? '동의함' : '미동의',
+            '⑨ 신청 경로': '랜딩페이지 무료 성장전략진단 신청폼'
         };
-        for (const [k, v] of entries) {
-            if (k.startsWith('_')) { if (k === '_honey' && v) body.botcheck = v; continue; }
-            body[LABELS[k] || k] = v;
-        }
+        return body;
+    }
+    async function sendWeb3Forms(entries) {
+        const body = buildMailBody(entries);
         const ctrl = new AbortController();
         const timer = setTimeout(() => ctrl.abort(), 15000);
         try {
